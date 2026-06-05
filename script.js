@@ -38,7 +38,27 @@ const questions = [
       "D. What's Earth?"
     ],
     answer: "A"
-  }
+  },
+    {
+    question: "Who is the richest man in the world?",
+    options: [
+      "A. Elon musk",
+      "B. Donald trump",
+      "C. Putin",
+      "D. Abe Shinzo"
+    ],
+    answer: "A"
+  },
+    {
+    question: "Who is the current president of USA",
+    options: [
+      "A. Joe Biden",
+      "B. Donald trump",
+      "C. Barack Obama",
+      "D. Kamala Harris"
+    ],
+    answer: "B"
+  },
 ];
 
 let currentQuestion = 0;
