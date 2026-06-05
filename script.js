@@ -63,7 +63,6 @@ const questions = [
 
 let currentQuestion = 0;
 let score = 0;
-let quizFinished = false;
 let answered = false;
 
 const questionEl = document.getElementById("question");
@@ -72,20 +71,6 @@ const resultEl = document.getElementById("result");
 const nextBtn = document.getElementById("nextBtn");
 
 function loadQuestion() {
-
-  if (currentQuestion >= questions.length) {
-
-    questionEl.textContent = "クイズ終了！";
-    choicesEl.innerHTML = "";
-
-    resultEl.textContent =
-      `あなたの正解率は ${score}/${questions.length} (${Math.round(score / questions.length * 100)}%)`;
-
-    nextBtn.textContent = "もう一度やる？";
-
-    quizFinished = true;
-    return;
-  }
 
   answered = false;
 
@@ -113,7 +98,8 @@ function loadQuestion() {
         resultEl.textContent = "正解！";
         score++;
       } else {
-        resultEl.textContent = `不正解！ 正解は ${q.answer}`;
+        resultEl.textContent =
+          `不正解！正解は ${q.answer}`;
       }
 
       document
@@ -131,33 +117,31 @@ function loadQuestion() {
 
 nextBtn.addEventListener("click", () => {
 
-  if (quizFinished) {
-
-    currentQuestion = 0;
-    score = 0;
-    quizFinished = false;
-
-    questions.sort(() => Math.random() - 0.5);
-
-    nextBtn.textContent = "次へ";
-
-    loadQuestion();
-    return;
-  }
-
   if (!answered) {
 
     resultEl.textContent =
-      "あきらめるのはまだ早い！まずは答えを選んでみよう！";
+      "あきらめるのはまだ早い！まずは答えを選ぼう！";
 
     return;
   }
 
   currentQuestion++;
+
+  if (currentQuestion >= questions.length) {
+
+    questionEl.textContent = "クイズ終了！";
+    choicesEl.innerHTML = "";
+
+    resultEl.textContent =
+      `あなたの正解率は ${score}/${questions.length} (${Math.round(score / questions.length * 100)}%)`;
+
+    nextBtn.disabled = true;
+
+    return;
+  }
+
   loadQuestion();
 
 });
-
-questions.sort(() => Math.random() - 0.5);
 
 loadQuestion();
