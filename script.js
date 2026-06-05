@@ -39,53 +39,55 @@ const questions = [
     ],
     answer: "A"
   },
-    {
+  {
     question: "Who is the richest man in the world?",
     options: [
-      "A. Elon musk",
-      "B. Donald trump",
+      "A. Elon Musk",
+      "B. Donald Trump",
       "C. Putin",
       "D. Abe Shinzo"
     ],
     answer: "A"
   },
-    {
-    question: "Who is the current president of USA",
+  {
+    question: "Who is the current president of USA?",
     options: [
       "A. Joe Biden",
-      "B. Donald trump",
+      "B. Donald Trump",
       "C. Barack Obama",
       "D. Kamala Harris"
     ],
     answer: "B"
-  },
+  }
 ];
 
 let currentQuestion = 0;
 let score = 0;
 let quizFinished = false;
+let answered = false;
 
 const questionEl = document.getElementById("question");
 const choicesEl = document.getElementById("choices");
 const resultEl = document.getElementById("result");
 const nextBtn = document.getElementById("nextBtn");
 
-// 問題を表示
 function loadQuestion() {
 
   if (currentQuestion >= questions.length) {
 
-    questionEl.textContent = "クイズ修了!";
+    questionEl.textContent = "クイズ終了！";
     choicesEl.innerHTML = "";
 
     resultEl.textContent =
       `あなたの正解率は ${score}/${questions.length} (${Math.round(score / questions.length * 100)}%)`;
-    answered = false;
+
     nextBtn.textContent = "もう一度やる？";
 
     quizFinished = true;
     return;
   }
+
+  answered = false;
 
   const q = questions[currentQuestion];
 
@@ -101,16 +103,19 @@ function loadQuestion() {
 
     btn.addEventListener("click", () => {
 
+      if (answered) return;
+
+      answered = true;
+
       const answerLetter = option.charAt(0);
 
       if (answerLetter === q.answer) {
         resultEl.textContent = "正解！";
         score++;
       } else {
-        resultEl.textContent = `間違え! 正解は: ${q.answer}`;
+        resultEl.textContent = `不正解！ 正解は ${q.answer}`;
       }
 
-      // 回答後はボタン無効化
       document
         .querySelectorAll("#choices button")
         .forEach(button => button.disabled = true);
@@ -119,14 +124,13 @@ function loadQuestion() {
 
     choicesEl.appendChild(btn);
     choicesEl.appendChild(document.createElement("br"));
+
   });
+
 }
 
-btn.addEventListener("click", () => {
+nextBtn.addEventListener("click", () => {
 
-  answered = true;
-
-  const answerLetter = option.charAt(0);
   if (quizFinished) {
 
     currentQuestion = 0;
@@ -135,15 +139,17 @@ btn.addEventListener("click", () => {
 
     questions.sort(() => Math.random() - 0.5);
 
-    nextBtn.textContent = "次に進む";
+    nextBtn.textContent = "次へ";
 
     loadQuestion();
     return;
   }
 
   if (!answered) {
+
     resultEl.textContent =
-      "諦めないで! 適当でも正解するかもよ.";
+      "あきらめるのはまだ早い！まずは答えを選んでみよう！";
+
     return;
   }
 
@@ -151,3 +157,7 @@ btn.addEventListener("click", () => {
   loadQuestion();
 
 });
+
+questions.sort(() => Math.random() - 0.5);
+
+loadQuestion();
