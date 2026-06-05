@@ -61,14 +61,114 @@ const questions = [
   }
 ];
 
+let selectedQuestions = [];
 let currentQuestion = 0;
 let score = 0;
 let answered = false;
+let quizFinished = false;
 
 const questionEl = document.getElementById("question");
 const choicesEl = document.getElementById("choices");
 const resultEl = document.getElementById("result");
 const nextBtn = document.getElementById("nextBtn");
+
+function startGame() {
+
+  selectedQuestions =
+    [...questions]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 4);
+
+  currentQuestion = 0;
+  score = 0;
+  answered = false;
+  quizFinished = false;
+
+  nextBtn.disabled = false;
+  nextBtn.textContent = "Next";
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+
+  answered = false;
+
+  const q = selectedQuestions[currentQuestion];
+
+  questionEl.textContent = q.question;
+  choicesEl.innerHTML = "";
+  resultEl.textContent = "";
+
+  q.options.forEach(option => {
+
+    const btn = document.createElement("button");
+
+    btn.textContent = option;
+
+    btn.addEventListener("click", () => {
+
+      if (answered) return;
+
+      answered = true;
+
+      const answerLetter = option.charAt(0);
+
+      if (answerLetter === q.answer) {
+        resultEl.textContent = "正解！";
+        score++;
+      } else {
+        resultEl.textContent =
+          `不正解！正解は ${q.answer}`;
+      }
+
+      document
+        .querySelectorAll("#choices button")
+        .forEach(button => button.disabled = true);
+
+    });
+
+    choicesEl.appendChild(btn);
+    choicesEl.appendChild(document.createElement("br"));
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+
+  if (quizFinished) {
+    startGame();
+    return;
+  }
+
+  if (!answered) {
+
+    resultEl.textContent =
+      "あきらめるのはまだ早い！まずは答えを選ぼう！";
+
+    return;
+  }
+
+  currentQuestion++;
+
+  if (currentQuestion >= selectedQuestions.length) {
+
+    questionEl.textContent = "クイズ終了！";
+    choicesEl.innerHTML = "";
+
+    resultEl.textContent =
+      `あなたの正解率は ${score}/${selectedQuestions.length} (${Math.round(score / selectedQuestions.length * 100)}%)`;
+
+    nextBtn.textContent = "もう一度やる？";
+
+    quizFinished = true;
+
+    return;
+  }
+
+  loadQuestion();
+});
+
+startGame();
 
 function loadQuestion() {
 
