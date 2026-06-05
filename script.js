@@ -74,10 +74,9 @@ const nextBtn = document.getElementById("nextBtn");
 
 function startGame() {
 
-  selectedQuestions =
-    [...questions]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 4);
+  selectedQuestions = [...questions]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 4);
 
   currentQuestion = 0;
   score = 0;
@@ -130,6 +129,7 @@ function loadQuestion() {
 
     choicesEl.appendChild(btn);
     choicesEl.appendChild(document.createElement("br"));
+
   });
 }
 
@@ -169,79 +169,3 @@ nextBtn.addEventListener("click", () => {
 });
 
 startGame();
-
-function loadQuestion() {
-
-  answered = false;
-
-  const q = questions[currentQuestion];
-
-  questionEl.textContent = q.question;
-  choicesEl.innerHTML = "";
-  resultEl.textContent = "";
-
-  q.options.forEach(option => {
-
-    const btn = document.createElement("button");
-
-    btn.textContent = option;
-
-    btn.addEventListener("click", () => {
-
-      if (answered) return;
-
-      answered = true;
-
-      const answerLetter = option.charAt(0);
-
-      if (answerLetter === q.answer) {
-        resultEl.textContent = "正解！";
-        score++;
-      } else {
-        resultEl.textContent =
-          `不正解！正解は ${q.answer}`;
-      }
-
-      document
-        .querySelectorAll("#choices button")
-        .forEach(button => button.disabled = true);
-
-    });
-
-    choicesEl.appendChild(btn);
-    choicesEl.appendChild(document.createElement("br"));
-
-  });
-
-}
-
-nextBtn.addEventListener("click", () => {
-
-  if (!answered) {
-
-    resultEl.textContent =
-      "あきらめるのはまだ早い！まずは答えを選ぼう！";
-
-    return;
-  }
-
-  currentQuestion++;
-
-  if (currentQuestion >= questions.length) {
-
-    questionEl.textContent = "クイズ終了！";
-    choicesEl.innerHTML = "";
-
-    resultEl.textContent =
-      `あなたの正解率は ${score}/${questions.length} (${Math.round(score / questions.length * 100)}%)`;
-
-    nextBtn.disabled = true;
-
-    return;
-  }
-
-  loadQuestion();
-
-});
-
-loadQuestion();
