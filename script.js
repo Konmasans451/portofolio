@@ -50,20 +50,23 @@ const choicesEl = document.getElementById("choices");
 const resultEl = document.getElementById("result");
 const nextBtn = document.getElementById("nextBtn");
 
+// 問題を表示
 function loadQuestion() {
 
   if (currentQuestion >= questions.length) {
+
     questionEl.textContent = "Quiz Finished!";
     choicesEl.innerHTML = "";
 
     resultEl.textContent =
-      `Your score is ${Math.round(score / questions.length * 100)}%`;
+      `Your score is ${score}/${questions.length} (${Math.round(score / questions.length * 100)}%)`;
 
     nextBtn.textContent = "Play Again";
+
     quizFinished = true;
     return;
   }
-  
+
   const q = questions[currentQuestion];
 
   questionEl.textContent = q.question;
@@ -84,9 +87,10 @@ function loadQuestion() {
         resultEl.textContent = "CORRECT!";
         score++;
       } else {
-        resultEl.textContent = "WRONG!";
+        resultEl.textContent = `WRONG! Correct answer: ${q.answer}`;
       }
 
+      // 回答後はボタン無効化
       document
         .querySelectorAll("#choices button")
         .forEach(button => button.disabled = true);
@@ -98,6 +102,7 @@ function loadQuestion() {
   });
 }
 
+// Next / Play Again
 nextBtn.addEventListener("click", () => {
 
   if (quizFinished) {
@@ -106,6 +111,7 @@ nextBtn.addEventListener("click", () => {
     score = 0;
     quizFinished = false;
 
+    // 問題をシャッフル
     questions.sort(() => Math.random() - 0.5);
 
     nextBtn.textContent = "Next";
@@ -116,5 +122,10 @@ nextBtn.addEventListener("click", () => {
 
   currentQuestion++;
   loadQuestion();
-
 });
+
+// 最初のシャッフル
+questions.sort(() => Math.random() - 0.5);
+
+// 最初の問題表示
+loadQuestion();
