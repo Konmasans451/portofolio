@@ -55,13 +55,13 @@ function loadQuestion() {
 
   if (currentQuestion >= questions.length) {
 
-    questionEl.textContent = "Quiz Finished!";
+    questionEl.textContent = "クイズ修了!";
     choicesEl.innerHTML = "";
 
     resultEl.textContent =
-      `Your score is ${score}/${questions.length} (${Math.round(score / questions.length * 100)}%)`;
-
-    nextBtn.textContent = "Play Again";
+      `あなたの正解率は ${score}/${questions.length} (${Math.round(score / questions.length * 100)}%)`;
+    answered = false;
+    nextBtn.textContent = "もう一度やる？";
 
     quizFinished = true;
     return;
@@ -84,10 +84,10 @@ function loadQuestion() {
       const answerLetter = option.charAt(0);
 
       if (answerLetter === q.answer) {
-        resultEl.textContent = "CORRECT!";
+        resultEl.textContent = "正解！";
         score++;
       } else {
-        resultEl.textContent = `WRONG! Correct answer: ${q.answer}`;
+        resultEl.textContent = `間違え! 正解は: ${q.answer}`;
       }
 
       // 回答後はボタン無効化
@@ -102,9 +102,11 @@ function loadQuestion() {
   });
 }
 
-// Next / Play Again
-nextBtn.addEventListener("click", () => {
+btn.addEventListener("click", () => {
 
+  answered = true;
+
+  const answerLetter = option.charAt(0);
   if (quizFinished) {
 
     currentQuestion = 0;
@@ -113,18 +115,19 @@ nextBtn.addEventListener("click", () => {
 
     questions.sort(() => Math.random() - 0.5);
 
-    nextBtn.textContent = "Next";
+    nextBtn.textContent = "次に進む";
 
     loadQuestion();
     return;
   }
 
-  if (currentQuestion < questions.length - 1) {
-    currentQuestion++;
-    loadQuestion();
-  } else {
-    currentQuestion = questions.length;
-    loadQuestion();
+  if (!answered) {
+    resultEl.textContent =
+      "諦めないで! 適当でも正解するかもよ.";
+    return;
   }
+
+  currentQuestion++;
+  loadQuestion();
 
 });
