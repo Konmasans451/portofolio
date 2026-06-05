@@ -43,6 +43,7 @@ const questions = [
 
 let currentQuestion = 0;
 let score = 0;
+let quizFinished = false;
 
 const questionEl = document.getElementById("question");
 const choicesEl = document.getElementById("choices");
@@ -54,12 +55,15 @@ function loadQuestion() {
   if (currentQuestion >= questions.length) {
     questionEl.textContent = "Quiz Finished!";
     choicesEl.innerHTML = "";
+
     resultEl.textContent =
       `Your score is ${Math.round(score / questions.length * 100)}%`;
-    nextBtn.style.display = "none";
+
+    nextBtn.textContent = "Play Again";
+    quizFinished = true;
     return;
   }
-
+  
   const q = questions[currentQuestion];
 
   questionEl.textContent = q.question;
@@ -95,8 +99,22 @@ function loadQuestion() {
 }
 
 nextBtn.addEventListener("click", () => {
+
+  if (quizFinished) {
+
+    currentQuestion = 0;
+    score = 0;
+    quizFinished = false;
+
+    questions.sort(() => Math.random() - 0.5);
+
+    nextBtn.textContent = "Next";
+
+    loadQuestion();
+    return;
+  }
+
   currentQuestion++;
   loadQuestion();
-});
 
-loadQuestion();
+});
