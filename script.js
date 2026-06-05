@@ -111,7 +111,6 @@ nextBtn.addEventListener("click", () => {
     score = 0;
     quizFinished = false;
 
-    // 問題をシャッフル
     questions.sort(() => Math.random() - 0.5);
 
     nextBtn.textContent = "Next";
@@ -120,12 +119,12 @@ nextBtn.addEventListener("click", () => {
     return;
   }
 
-  currentQuestion++;
-  loadQuestion();
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++;
+    loadQuestion();
+  } else {
+    currentQuestion = questions.length;
+    loadQuestion();
+  }
+
 });
-
-// 最初のシャッフル
-questions.sort(() => Math.random() - 0.5);
-
-// 最初の問題表示
-loadQuestion();
